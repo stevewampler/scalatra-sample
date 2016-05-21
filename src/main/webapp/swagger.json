@@ -1,0 +1,357 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "OneSource API",
+        "description": "OneSource API",
+        "version": "1.0.0"
+    },
+    "host": "api.avention.com",
+    "schemes": [
+        "https"
+    ],
+    "basePath": "/v1",
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/v1/company/search": {
+            "get": {
+                "summary": "Basic Company Search",
+                "description": "Returns an array of BasicCompany objects that match a specified query.\n",
+                "parameters": [
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "description": "A query string. Defaults to no query string.",
+                        "required": false,
+                        "type": "string",
+                        "format": "string"
+                    },
+                    {
+                        "name": "from",
+                        "in": "query",
+                        "description": "The starting offset in the query results. Defaults to 0.",
+                        "required": false,
+                        "type": "number",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "description": "The number of items to return. Defaults to 50.",
+                        "required": false,
+                        "type": "number",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "A comma separated list of company fields. Defaults to returning results in order of relevance.",
+                        "required": false,
+                        "type": "string",
+                        "format": "string"
+                    }
+                ],
+                "tags": [
+                    "Company"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "An array of BasicCompany objects.",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/BasicCompany"
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Advanced Company Search",
+                "description": "Returns an array of BasicCompany objects that match a specified query.\n",
+                "tags": [
+                    "Company"
+                ],
+                "parameters": [
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "description": "A query string. Defaults to no query string.",
+                        "required": false,
+                        "type": "string",
+                        "format": "string"
+                    },
+                    {
+                        "name": "from",
+                        "in": "query",
+                        "description": "The starting offset in the query results. Defaults to 0.",
+                        "required": false,
+                        "type": "number",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "description": "The number of items to return. Defaults to 50. The amount from + size must not exceed 1000.",
+                        "required": false,
+                        "type": "number",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "A comma separated list of company fields. You can optionally append the sort order ('asc' or 'desc') to the field name separated by a colon (e.g. companyName:asc). The sort order defaults to ascending. If the sortBy query parameter is not specified, the sort order defaults to returning results in order of relevance.",
+                        "required": false,
+                        "type": "string",
+                        "format": "string"
+                    },
+                    {
+                        "name": "queryDSL",
+                        "in": "body",
+                        "description": "A JSON object containing query parameters. The query parameters specified in the URL override those in the QueryDSL object.",
+                        "schema": {
+                            "$ref": "#/definitions/QueryDSL"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "An array of BasicCompany objects",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/BasicCompany"
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/company/{id}.basic": {
+            "get": {
+                "summary": "Get a specific company",
+                "operationId": "getCompany",
+                "tags": [
+                    "Company"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "The uuid or key-id of the company to retrieve."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A BasicCompany",
+                        "schema": {
+                            "$ref": "#/definitions/BasicCompany"
+                        },
+                        "examples": {
+                            "application/json": "{\n  \"uuid\": \"b9986ac1-7461-3990-9649-dfd5d98363ee\",\n  \"keyId\": 134112287,\n  \"companyName\": \"ACME, LLC\",\n  \"addresses\": [\n    {\n       \"addressType\": \"primary\",\n       \"city\": \"Milford\",\n       \"postalCode\": \"01757-2923\",\n       \"nationalRegionId\": \"b68bfeb3-004e-3826-838b-1a08b82c01ef\",\n       \"stateOrProvinceId\": \"e1174df2-e142-31b2-bed0-81df5b4f272f\",\n       \"stateOrProvinceAbbreviation\": \"MA\",\n       \"stateOrProvinceName\": \"Massachusetts\",\n       \"countryId\": \"8f8578d9-7195-3d4d-a85f-65eadf168209\",\n       \"countryName\": \"United States\",\n       \"countryIso3\": \"USA\",\n       \"internationalRegionId\": \"25288eae-fa5e-39da-8369-78543a43d47f\",\n       \"address\": \"100 medway road suite 203\"\n    }\n  ],\n  \"phone\": \"508-555-1212\",\n  \"primaryUrl\": \"http://www.acme.com\"\n}"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected Error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "SortBy": {
+            "type": "object",
+            "properties": {
+                "field": {
+                    "type": "string",
+                    "format": "string",
+                    "description": "The name of a field to sort on."
+                },
+                "order": {
+                    "type": "string",
+                    "format": "string",
+                    "description": "The sort order based on the specified field. Either \"asc\" for ascending or \"desc\" for descending."
+                }
+            }
+        },
+        "Address": {
+            "type": "object",
+            "properties": {
+                "addressType": {
+                    "type": "string",
+                    "format": "string",
+                    "description": "The addresses type. Either \"primary\" or \"secondary\"."
+                },
+                "address1": {
+                    "type": "string",
+                    "format": "string",
+                    "description": "Address line 1."
+                },
+                "address2": {
+                    "type": "string",
+                    "format": "string",
+                    "description": "Address line 2."
+                },
+                "address3": {
+                    "type": "string",
+                    "format": "string",
+                    "description": "Address line 3."
+                },
+                "city": {
+                    "type": "string",
+                    "format": "string",
+                    "description": "The city name."
+                },
+                "countyId": {
+                    "type": "string",
+                    "format": "string",
+                    "description": "The county UUID."
+                },
+                "stateOrProvinceId": {
+                    "type": "string",
+                    "format": "string",
+                    "description": "The state or province UUID."
+                },
+                "postalCode": {
+                    "type": "string",
+                    "format": "string",
+                    "description": "The postal code."
+                },
+                "countryId": {
+                    "type": "string",
+                    "format": "string",
+                    "description": "The country UUID."
+                },
+                "nationalRegionId": {
+                    "type": "string",
+                    "format": "string",
+                    "description": "The national region UUID."
+                },
+                "stateOrProvinceAbbreviation": {
+                    "type": "string",
+                    "format": "string",
+                    "description": "The state or province abbreviation. E.g. \"MA\" for \"Massachusetts\"."
+                },
+                "stateOrProvinceName": {
+                    "type": "string",
+                    "format": "string",
+                    "description": "The state or province name. E.g. \"Massachusetts\"."
+                },
+                "countryName": {
+                    "type": "string",
+                    "format": "string",
+                    "description": "The country name. E.g. \"United States\"."
+                },
+                "countryIso3": {
+                    "type": "string",
+                    "format": "string",
+                    "description": "The country ISO 3 code. E.g. \"USA\"."
+                },
+                "internationalRegionId": {
+                    "type": "string",
+                    "format": "string",
+                    "description": "The international region UUID. E.g. \"25288eae-fa5e-39da-8369-78543a43d47f\"."
+                },
+                "address": {
+                    "type": "string",
+                    "format": "string",
+                    "description": "The address. E.g. \"100 beltway road suite 111\""
+                }
+            }
+        },
+        "BasicCompany": {
+            "type": "object",
+            "properties": {
+                "uuid": {
+                    "type": "string",
+                    "format": "string",
+                    "description": "The company's unique identifier in UUID format."
+                },
+                "keyId": {
+                    "type": "number",
+                    "format": "int32"
+                },
+                "companyName": {
+                    "type": "string",
+                    "description": "The company's name."
+                },
+                "addresses": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Address"
+                    }
+                },
+                "phone": {
+                    "type": "string",
+                    "description": "The company's primary phone number."
+                },
+                "primaryUrl": {
+                    "type": "string",
+                    "description": "The company's primary URL."
+                }
+            }
+        },
+        "QueryDSL": {
+            "type": "object",
+            "properties": {
+                "query": {
+                    "type": "string",
+                    "format": "string",
+                    "description": "A query string. Defaults to no query string."
+                },
+                "from": {
+                    "type": "number",
+                    "format": "int32",
+                    "description": "The offset in the list of results. Default is zero."
+                },
+                "size": {
+                    "type": "number",
+                    "format": "int32",
+                    "description": "The number of items to return. Defaults to 50. The amount from + size must not exceed 1000."
+                },
+                "sortBy": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/SortBy"
+                    }
+                }
+            }
+        },
+        "Error": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "fields": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
